@@ -6,7 +6,7 @@ class SessionSchema
 {
     public function __construct(
         private SessionId $sessionId,
-        private QuestionsCollection $questionsCollection
+        private QuestionsCollection $questionsCollection // ? Iterable
     )
     {
     }
