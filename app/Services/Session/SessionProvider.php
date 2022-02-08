@@ -23,7 +23,8 @@ class SessionProvider
     public function createSession(): SessionSchema
     {
         return new SessionSchema(
-            $this->generateSessionId()
+            $this->generateSessionId(),
+            []
         );
     }
 
@@ -40,7 +41,8 @@ class SessionProvider
     private function toSchema(array $data): SessionSchema
     {
         return new SessionSchema(
-            new SessionId($data['session_id'])
+            new SessionId($data['session_id']),
+            []
         );
     }
 }

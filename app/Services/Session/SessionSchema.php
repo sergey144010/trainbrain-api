@@ -6,7 +6,7 @@ class SessionSchema
 {
     public function __construct(
         private SessionId $sessionId,
-        private QuestionsCollection $questionsCollection // ? Iterable
+        private iterable $questionsCollection
     )
     {
     }
@@ -15,7 +15,17 @@ class SessionSchema
     {
         return [
             'session_id' => $this->sessionId->value(),
-            'questions' => $this->questionsCollection->toArray()
+            'questions' => $this->questionsCollectionToArray()
         ];
+    }
+
+    private function questionsCollectionToArray(): array
+    {
+        $list = [];
+        foreach ($this->questionsCollection as $item) {
+            $list[] = $item->toArray();
+        }
+
+        return $list;
     }
 }
