@@ -30,7 +30,7 @@ class Question
         $this->definitionCollection[] = $definition;
     }
 
-    private function make(): void
+    public function make(): void
     {
         shuffle($this->definitionCollection);
         $this->initState(array_rand($this->definitionCollection));
@@ -56,5 +56,10 @@ class Question
             self::STATE_KEY_STATUS => $this->status,
             self::STATE_KEY_CURRENT => $this->current,
         ];
+    }
+
+    public function hasDefinitions(): bool
+    {
+        return ! empty($this->definitionCollection) ? true : false;
     }
 }

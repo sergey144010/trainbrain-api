@@ -2,6 +2,8 @@
 
 namespace App\Services\Session;
 
+use App\Entities\Question;
+
 class SessionSchema
 {
     public function __construct(
@@ -22,8 +24,9 @@ class SessionSchema
     private function questionsCollectionToArray(): array
     {
         $list = [];
+        /** @var Question $item */
         foreach ($this->questionsCollection as $item) {
-            $list[] = $item->toArray();
+            $list[] = $item->state();
         }
 
         return $list;

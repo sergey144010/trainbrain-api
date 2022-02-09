@@ -2,10 +2,14 @@
 
 namespace App\Services\Session;
 
+use App\Services\Question\QuestionProvider;
+
 class SessionProvider
 {
-    public function __construct(private SessionRepositoryInterface $repository)
-    {
+    public function __construct(
+        private SessionRepositoryInterface $repository,
+        private QuestionProvider $questionProvider,
+    ) {
     }
 
     /**
@@ -24,7 +28,7 @@ class SessionProvider
     {
         return new SessionSchema(
             $this->generateSessionId(),
-            []
+            $this->questionProvider->getCollection()
         );
     }
 

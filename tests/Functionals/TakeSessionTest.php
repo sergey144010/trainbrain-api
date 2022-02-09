@@ -4,6 +4,7 @@ use App\Services\Session\Session;
 use App\Services\Session\SessionId;
 use App\Services\Session\SessionProvider;
 use App\Services\Session\SessionRepositoryInterface;
+use App\Services\Question\QuestionProvider;
 
 class TakeSessionTest extends TestCase
 {
@@ -19,7 +20,7 @@ class TakeSessionTest extends TestCase
         ->will($this->returnValue([self::SESSION_ID_KEY => self::SESSION_ID_VALUE]));
 
         $newSession = new Session(
-            new SessionProvider($repository),
+            new SessionProvider($repository, $this->createMock(QuestionProvider::class)),
             new SessionId(self::SESSION_ID_VALUE)
         );
 

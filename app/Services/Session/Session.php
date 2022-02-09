@@ -8,6 +8,7 @@ class Session
 
     private SessionId $sessionId;
     private SessionProvider $sessionProvider;
+    private SessionSchema $sessionSchema;
 
     public function __construct(
         SessionProvider $sessionProvider,
@@ -44,18 +45,34 @@ class Session
         return $this->sessionProvider->createSession();
     }
 
-    public function toJson(): string
+    public function make(): void
     {
         if (isset($this->sessionId)) {
             try {
-                $session = $this->findSession();
+                $this->sessionSchema = $this->findSession();
             } catch (SessionNotFoundException) {
-                $session = $this->createSession();
+                $this->sessionSchema = $this->createSession();
             }
         } else {
-            $session = $this->createSession();
+            $this->sessionSchema = $this->createSession();
+        }
+    }
+
+    public function toJson(): string
+    {
+        if (! isset($this->sessionSchema)) {
+            $this->make();
         }
 
-        return json_encode($session->toArray());
+        return json_encode($this->sessionSchema->toArray());
+    }
+
+    public function sessionSchema(): SessionSchema
+    {
+        if (isset($this->sessionSchema)) {
+            return $this->sessionSchema;
+        }
+
+        throw new \RuntimeException('SessionSchema not defined');
     }
 }
