@@ -14,6 +14,14 @@ class Question
     public const STATE_KEY_STATUS = 'status';
     public const STATE_KEY_CURRENT = 'current';
 
+    public const AVAILABLE_KEY = [
+        self::STATE_KEY_QUESTION,
+        self::STATE_KEY_ANSWERS,
+        self::STATE_KEY_TRUE_ID,
+        self::STATE_KEY_STATUS,
+        self::STATE_KEY_CURRENT,
+    ];
+
     /** @var Array<Definition> $definitionCollection */
     private array $definitionCollection = [];
     private array $state = [
