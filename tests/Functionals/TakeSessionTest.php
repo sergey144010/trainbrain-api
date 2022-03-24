@@ -1,4 +1,5 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
 use App\Services\Session\Session;
 use App\Services\Session\SessionId;
@@ -14,10 +15,14 @@ class TakeSessionTest extends TestCase
 
     public function testTakeSession()
     {
+        $return = new \stdClass();
+        $return->{self::SESSION_ID_KEY} = self::SESSION_ID_VALUE;
+        $return->{self::QUESTIONS_KEY} = [];
+
         $repository = $this->createMock(SessionRepositoryInterface::class);
         $repository->expects($this->once())
         ->method('findBySessionId')
-        ->will($this->returnValue([self::SESSION_ID_KEY => self::SESSION_ID_VALUE]));
+        ->will($this->returnValue($return));
 
         $newSession = new Session(
             new SessionProvider($repository, $this->createMock(QuestionProvider::class)),

@@ -6,8 +6,8 @@ interface SessionRepositoryInterface
 {
     /**
      * @param SessionId $sessionId
-     * @return Array<string, mixed>
+     * @return \stdClass
      * @throws SessionNotFoundException
      */
-    public function findBySessionId(SessionId $sessionId): array;
+    public function findBySessionId(SessionId $sessionId): \stdClass;
 }

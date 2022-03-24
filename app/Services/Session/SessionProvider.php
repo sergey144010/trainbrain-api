@@ -2,6 +2,7 @@
 
 namespace App\Services\Session;
 
+use App\Services\Question\QuestionFiller;
 use App\Services\Question\QuestionProvider;
 
 class SessionProvider
@@ -24,6 +25,19 @@ class SessionProvider
         );
     }
 
+    private function toSchema(\stdClass $data): SessionSchema
+    {
+        $questionCollection = [];
+        foreach ($data->questions as $question) {
+            $questionCollection[] = QuestionFiller::getQuestionFromData($question);
+        }
+
+        return new SessionSchema(
+            new SessionId($data->session_id),
+            $questionCollection
+        );
+    }
+
     public function createSession(): SessionSchema
     {
         return new SessionSchema(
@@ -40,14 +54,5 @@ class SessionProvider
     private function generateRandomString(): string
     {
         return substr(str_shuffle(md5(microtime())), random_int(0, 16), SessionId::LENGTH);
-    }
-
-    /** @param Array<string, mixed> $data */
-    private function toSchema(array $data): SessionSchema
-    {
-        return new SessionSchema(
-            new SessionId($data['session_id']),
-            []
-        );
     }
 }
