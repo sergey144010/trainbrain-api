@@ -12,8 +12,8 @@ class Session
 
     public function __construct(
         SessionProvider $sessionProvider,
-        SessionId $sessionId = null)
-    {
+        SessionId $sessionId = null
+    ) {
         if (isset($sessionId)) {
             $this->sessionId = $sessionId;
         }
@@ -64,7 +64,9 @@ class Session
             $this->make();
         }
 
-        return json_encode($this->sessionSchema->toArray());
+        /** @var string $string */
+        $string = json_encode($this->sessionSchema->toArray());
+        return $string;
     }
 
     public function sessionSchema(): SessionSchema

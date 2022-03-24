@@ -6,7 +6,7 @@ interface SessionRepositoryInterface
 {
     /**
      * @param SessionId $sessionId
-     * @return array
+     * @return Array<string, mixed>
      * @throws SessionNotFoundException
      */
     public function findBySessionId(SessionId $sessionId): array;

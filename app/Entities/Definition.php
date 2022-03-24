@@ -8,7 +8,7 @@ class Definition
     {
     }
 
-    public function id(): string
+    public function id(): int
     {
         return $this->id;
     }

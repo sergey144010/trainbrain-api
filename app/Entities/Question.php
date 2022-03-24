@@ -24,6 +24,7 @@ class Question
 
     /** @var Array<Definition> $definitionCollection */
     private array $definitionCollection = [];
+    /** @var Array<string, mixed> */
     private array $state = [
         self::STATE_KEY_QUESTION => '',
         self::STATE_KEY_ANSWERS => [],
@@ -41,7 +42,9 @@ class Question
     public function make(): void
     {
         shuffle($this->definitionCollection);
-        $this->initState(array_rand($this->definitionCollection));
+        /** @var int $randomKey */
+        $randomKey = array_rand($this->definitionCollection);
+        $this->initState($randomKey);
     }
 
     private function initState(int $key): void
@@ -53,6 +56,7 @@ class Question
         }, $this->definitionCollection);
     }
 
+    /** @return Array<string, mixed> */
     public function state(): array
     {
         if (empty($this->state[self::STATE_KEY_QUESTION])) {

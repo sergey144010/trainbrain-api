@@ -42,6 +42,7 @@ class SessionProvider
         return substr(str_shuffle(md5(microtime())), random_int(0, 16), SessionId::LENGTH);
     }
 
+    /** @param Array<string, mixed> $data */
     private function toSchema(array $data): SessionSchema
     {
         return new SessionSchema(
