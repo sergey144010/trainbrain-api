@@ -77,4 +77,16 @@ class Session
 
         throw new \RuntimeException('SessionSchema not defined');
     }
+
+    /**
+     * @return Array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        if (! isset($this->sessionSchema)) {
+            $this->make();
+        }
+
+        return $this->sessionSchema->toArray();
+    }
 }

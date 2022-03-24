@@ -174,6 +174,6 @@ class CreateNewSessionFromCurrentDataTest extends TestCase
         $session = new App\Services\Session\Session($sessionProvider, $sessionId);
         $session->make();
 
-        self::assertEquals("16546%asDad324rf", $session->sessionSchema()->toArray()['session_id']);
+        self::assertEquals("16546%asDad324rf", $session->toArray()['session_id']);
     }
 }
