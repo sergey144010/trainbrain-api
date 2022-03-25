@@ -13,7 +13,9 @@ class QuestionProvider
     {
     }
 
-    /** @return Array<Question> */
+    /**
+     * @return Array<Question>
+     */
     public function getCollection(): array
     {
         $collection = [];

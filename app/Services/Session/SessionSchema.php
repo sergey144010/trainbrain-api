@@ -8,11 +8,11 @@ class SessionSchema
 {
     /**
      * @param SessionId $sessionId
-     * @param Iterable<Question> $questionsCollection
+     * @param Array<Question> $questionsCollection
      */
     public function __construct(
         private SessionId $sessionId,
-        private iterable $questionsCollection
+        private array $questionsCollection
     ) {
     }
 
@@ -39,5 +39,27 @@ class SessionSchema
         }
 
         return $list;
+    }
+
+    public function question(int $questionId): Question
+    {
+        if (! isset($this->questionsCollection[$questionId])) {
+            throw new \RuntimeException('Question not defined');
+        }
+
+        return $this->questionsCollection[$questionId];
+    }
+
+    public function countQuestions(): int
+    {
+        return count($this->questionsCollection);
+    }
+
+    /**
+     * @return Array<int, int>
+     */
+    public function questionsKeys(): array
+    {
+        return array_keys($this->questionsCollection);
     }
 }

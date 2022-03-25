@@ -89,4 +89,35 @@ class Session
 
         return $this->sessionSchema->toArray();
     }
+
+    public function decideWrong(int $questionId): void
+    {
+        if (! isset($this->sessionSchema)) {
+            throw new \RuntimeException('SessionSchema not defined');
+        }
+
+        $this->sessionSchema->question($questionId)->decideWrong();
+    }
+
+    public function decideRight(int $questionId): void
+    {
+        if (! isset($this->sessionSchema)) {
+            throw new \RuntimeException('SessionSchema not defined');
+        }
+
+        $this->sessionSchema->question($questionId)->decideRight();
+    }
+
+    public function currentQuestion(int $questionId): void
+    {
+        if (! isset($this->sessionSchema)) {
+            throw new \RuntimeException('SessionSchema not defined');
+        }
+
+        array_map(function ($questionId) {
+            $this->sessionSchema->question($questionId)->notCurrent();
+        }, $this->sessionSchema->questionsKeys());
+
+        $this->sessionSchema->question($questionId)->current();
+    }
 }

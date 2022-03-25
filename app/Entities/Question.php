@@ -30,7 +30,7 @@ class Question
         self::STATE_KEY_ANSWERS => [],
         self::STATE_KEY_TRUE_ID => null,
     ];
-    private bool|null $status = null;
+    private int|null $status = null;
     private bool $current = false;
 
 
@@ -73,5 +73,25 @@ class Question
     public function hasDefinitions(): bool
     {
         return ! empty($this->definitionCollection) ? true : false;
+    }
+
+    public function decideWrong(): void
+    {
+        $this->status = self::STATUS_DECIDED_WRONG;
+    }
+
+    public function decideRight(): void
+    {
+        $this->status = self::STATUS_DECIDED_RIGHT;
+    }
+
+    public function current(): void
+    {
+        $this->current = true;
+    }
+
+    public function notCurrent(): void
+    {
+        $this->current = false;
     }
 }
