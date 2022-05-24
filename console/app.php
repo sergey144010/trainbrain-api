@@ -135,7 +135,14 @@ if ($options['t'] === 'migrate') {
 }
 
 if ($options['t'] === 'console') {
-   (new Console())->run();
+   #(new Console())->run();
+
+    $redis = new Redis();
+    $redis->connect('redis');
+
+    if ($redis->ping()) {
+        echo "PONGn";
+    }
 
     return;
 }

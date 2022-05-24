@@ -10,4 +10,5 @@ interface SessionRepositoryInterface
      * @throws SessionNotFoundException
      */
     public function findBySessionId(SessionId $sessionId): \stdClass;
+    public function toStorage(SessionSchema $sessionSchema): void;
 }

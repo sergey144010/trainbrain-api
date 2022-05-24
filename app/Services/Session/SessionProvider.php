@@ -55,4 +55,9 @@ class SessionProvider
     {
         return substr(str_shuffle(md5(microtime())), random_int(0, 16), SessionId::LENGTH);
     }
+
+    public function sessionSchemaToStorage(SessionSchema $sessionSchema): void
+    {
+        $this->repository->toStorage($sessionSchema);
+    }
 }
