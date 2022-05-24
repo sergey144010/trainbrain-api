@@ -74,6 +74,36 @@ class Migration
                     'name' => 'array_diff',
                     'definition' => 'Computes the difference of arrays'
                 ],
+                [
+                    'id' => 11,
+                    'name' => 'array_fill_keys',
+                    'definition' => 'Fill an array with values, specifying keys'
+                ],
+                [
+                    'id' => 12,
+                    'name' => 'array_fill',
+                    'definition' => 'Fill an array with values'
+                ],
+                [
+                    'id' => 13,
+                    'name' => 'array_filter',
+                    'definition' => 'Filters elements of an array using a callback function'
+                ],
+                [
+                    'id' => 14,
+                    'name' => 'array_flip',
+                    'definition' => 'Exchanges all keys with their associated values in an array'
+                ],
+                [
+                    'id' => 15,
+                    'name' => 'array_intersect_assoc',
+                    'definition' => 'Computes the intersection of arrays with additional index check'
+                ],
+                [
+                    'id' => 16,
+                    'name' => 'array_intersect_key',
+                    'definition' => 'Computes the intersection of arrays using keys for comparison'
+                ],
             ]
         );
 
@@ -98,14 +128,14 @@ if (! isset($options['t'])) {
     return;
 }
 
-if ($options['t'] === 'migration') {
+if ($options['t'] === 'migrate') {
     (new Migration())->run();
 
     return;
 }
 
 if ($options['t'] === 'console') {
-    (new Console())->run();
+   (new Console())->run();
 
     return;
 }

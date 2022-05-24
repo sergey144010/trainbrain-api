@@ -22,16 +22,38 @@ class QuestionProvider
         $i = 0;
         $question = new Question();
         foreach ($this->definitionProvider->getCollection() as $definition) {
-            if ($i < self::COUNT_ANSWER_TO_QUESTION) {
-                $question->addDefinition($definition);
-                $i += 1;
-            } else {
+            /** if contain one conditions */
+            if ($i === self::COUNT_ANSWER_TO_QUESTION) {
                 $question->make();
                 $collection[] = $question;
-                $i = 0;
+                $i = 1;
                 $question = new Question();
                 $question->addDefinition($definition);
+
+                continue;
             }
+
+            $question->addDefinition($definition);
+            $i++;
+
+            /** if contain two conditions */
+            /*
+            if (
+                $i != 0 &&
+                $i % self::COUNT_ANSWER_TO_QUESTION === 0
+            ) {
+                $question->make();
+                $collection[] = $question;
+                $question = new Question();
+                $question->addDefinition($definition);
+                $i = 1;
+
+                continue;
+            }
+
+            $question->addDefinition($definition);
+            $i++;
+            */
         }
 
         if ($question->hasDefinitions()) {
