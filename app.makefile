@@ -1,7 +1,13 @@
 SHELL=/bin/bash
 
+hello:
+	@echo 'This is make file app'
+
+#console-app:
+	#@docker exec train-php-cli php ./console/app.php
+
 check:
-	./vendor/bin/phpcbf --standard=PSR12 ./app
-	./vendor/bin/phpcs --standard=PSR12 ./app
-	./vendor/bin/phpstan analyse -l 8 ./app
-	./vendor/bin/phpunit
+	docker exec train-php-cli ./vendor/bin/phpcbf --standard=PSR12 ./app
+	docker exec train-php-cli ./vendor/bin/phpcs --standard=PSR12 ./app
+	docker exec train-php-cli ./vendor/bin/phpstan analyse -l 8 ./app
+	docker exec train-php-cli ./vendor/bin/phpunit

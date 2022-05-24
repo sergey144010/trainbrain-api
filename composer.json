@@ -6,7 +6,8 @@
     "php": "^8.1",
     "ext-mbstring":"*",
     "ext-json":"*",
-    "mongodb/mongodb": "^1.12"
+    "mongodb/mongodb": "^1.12",
+    "symfony/http-foundation": "^6.0"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.6",
