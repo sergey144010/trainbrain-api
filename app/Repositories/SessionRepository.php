@@ -16,6 +16,9 @@ class SessionRepository implements SessionRepositoryInterface
 
     public function toStorage(SessionSchema $sessionSchema): void
     {
-        // TODO: Implement toStorage() method.
+        $redis = new \Redis();
+        $redis->connect('redis', 6379);
+        $schema = $sessionSchema->toArray();
+        $redis->set($schema['session_id'], json_encode($schema));
     }
 }

@@ -42,7 +42,9 @@ class Session
 
     private function createSession(): SessionSchema
     {
-        return $this->sessionProvider->createSession();
+        $sessionSchema = $this->sessionProvider->createSession();
+        $this->sessionProvider->sessionSchemaToStorage($sessionSchema);
+        return $sessionSchema;
     }
 
     public function make(): void
