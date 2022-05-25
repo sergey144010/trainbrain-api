@@ -2,15 +2,18 @@
 
 namespace App;
 
-use App\Connections\RedisClient;
-use App\Repositories\DefinitionRepository;
-use App\Repositories\SessionRepository;
-use App\Services\Definition\DefinitionProvider;
-use App\Services\Question\QuestionProvider;
-use App\Services\Session\Session;
-use App\Services\Session\SessionId;
-use App\Services\Session\SessionProvider;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Controllers\ControllerInterface;
+use App\Controllers\SessionController;
+use App\Controllers\SessionStorageController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Routing\Exception\NoConfigurationException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 
 class Application
 {
@@ -20,14 +23,56 @@ class Application
 
     public function run(): void
     {
-        JsonResponse::fromJsonString(
-            (new Session(
-                new SessionProvider(
-                    new SessionRepository((new RedisClient())->redis()),
-                    new QuestionProvider(new DefinitionProvider(new DefinitionRepository()))
-                ),
-                new SessionId('35f785f3eea1476')
-            ))->toJson()
-        )->send();
+        $routes = new RouteCollection();
+        $this->routeCollection($routes);
+
+        $context = new RequestContext();
+        $context->fromRequest(Request::createFromGlobals());
+
+        $matcher = new UrlMatcher($routes, $context);
+        try {
+            $parameters = $matcher->match($context->getPathInfo());
+        } catch (NoConfigurationException) {
+            return;
+        } catch (ResourceNotFoundException) {
+            return;
+        } catch (MethodNotAllowedException) {
+            return;
+        }
+
+        $controllerName = $parameters['_controller'];
+        /** @var ControllerInterface $controller */
+        $controller = new $controllerName();
+        $controller->handle($parameters['slug'] ?? null);
+    }
+
+    private function routeCollection(RouteCollection $routeCollection): void
+    {
+        $routeCollection->add(
+            'session-storage-new',
+            new Route('/session-storage', ['_controller' => SessionStorageController::class])
+        );
+        $routeCollection->add(
+            'session-storage-new-',
+            new Route('/session-storage/', ['_controller' => SessionStorageController::class])
+        );
+
+        $routeCollection->add(
+            'session-storage-new-or-saved',
+            new Route(
+                path: '/session-storage/{slug}',
+                defaults: ['_controller' => SessionStorageController::class],
+                methods: [Request::METHOD_GET]
+            ),
+        );
+
+        $routeCollection->add(
+            'session-new-or-saved',
+            new Route(
+                path: '/session/{slug}',
+                defaults: ['_controller' => SessionController::class],
+                methods: [Request::METHOD_GET]
+            ),
+        );
     }
 }

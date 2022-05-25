@@ -10,6 +10,8 @@ class Session
     private SessionProvider $sessionProvider;
     private SessionSchema $sessionSchema;
 
+    private bool $withoutTrueId = false;
+
     public function __construct(
         SessionProvider $sessionProvider,
         SessionId $sessionId = null
@@ -62,22 +64,9 @@ class Session
 
     public function toJson(): string
     {
-        if (! isset($this->sessionSchema)) {
-            $this->make();
-        }
-
         /** @var string $string */
-        $string = json_encode($this->sessionSchema->toArray());
+        $string = json_encode($this->toArray());
         return $string;
-    }
-
-    public function sessionSchema(): SessionSchema
-    {
-        if (isset($this->sessionSchema)) {
-            return $this->sessionSchema;
-        }
-
-        throw new \RuntimeException('SessionSchema not defined');
     }
 
     /**
@@ -89,7 +78,25 @@ class Session
             $this->make();
         }
 
-        return $this->sessionSchema->toArray();
+        $response = $this->sessionSchema->toArray();
+
+        if ($this->withoutTrueId) {
+            $response['questions'] = array_map(static function (array $question) {
+                unset($question['true_id']);
+                return $question;
+            }, $response['questions']);
+        }
+
+        return $response;
+    }
+
+    public function sessionSchema(): SessionSchema
+    {
+        if (isset($this->sessionSchema)) {
+            return $this->sessionSchema;
+        }
+
+        throw new \RuntimeException('SessionSchema not defined');
     }
 
     public function decideWrong(int $questionId): void
@@ -121,5 +128,12 @@ class Session
         }, $this->sessionSchema->questionsKeys());
 
         $this->sessionSchema->question($questionId)->current();
+    }
+
+    public function withoutTrueId(): self
+    {
+        $this->withoutTrueId = true;
+
+        return $this;
     }
 }
