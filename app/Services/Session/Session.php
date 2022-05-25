@@ -34,31 +34,38 @@ class Session
     */
 
     /**
-     * @return SessionSchema
      * @throws SessionNotFoundException
      */
-    private function findSession(): SessionSchema
+    public function findSession(): void
     {
-        return $this->sessionProvider->findBySessionId($this->sessionId);
+        if (! isset($this->sessionId)) {
+            throw new \RuntimeException('SessionId not defined');
+        }
+
+        $this->sessionSchema = $this->sessionProvider->findBySessionId($this->sessionId);
     }
 
-    private function createSession(): SessionSchema
+    private function createSession(): void
     {
-        $sessionSchema = $this->sessionProvider->createSession();
-        $this->sessionProvider->sessionSchemaToStorage($sessionSchema);
-        return $sessionSchema;
+        $this->sessionSchema = $this->sessionProvider->createSession();
+        $this->sessionSchemaToStorage();
+    }
+
+    public function sessionSchemaToStorage(): void
+    {
+        $this->sessionProvider->sessionSchemaToStorage($this->sessionSchema);
     }
 
     public function make(): void
     {
         if (isset($this->sessionId)) {
             try {
-                $this->sessionSchema = $this->findSession();
+                $this->findSession();
             } catch (SessionNotFoundException) {
-                $this->sessionSchema = $this->createSession();
+                $this->createSession();
             }
         } else {
-            $this->sessionSchema = $this->createSession();
+            $this->createSession();
         }
     }
 
@@ -128,6 +135,11 @@ class Session
         }, $this->sessionSchema->questionsKeys());
 
         $this->sessionSchema->question($questionId)->current();
+    }
+
+    public function decideBy(int $questionId, int $trueId): void
+    {
+        $this->sessionSchema->question($questionId)->decideBy($trueId);
     }
 
     public function withoutTrueId(): self

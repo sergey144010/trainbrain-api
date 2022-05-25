@@ -94,4 +94,17 @@ class Question
     {
         $this->current = false;
     }
+
+    public function decideBy(int $trueId): void
+    {
+        if ($this->state[self::STATE_KEY_TRUE_ID] !== null) {
+            throw new \RuntimeException('True_id already setup');
+        }
+
+        if ((int)$this->state[self::STATE_KEY_TRUE_ID] === $trueId) {
+            $this->decideRight();
+            return;
+        }
+        $this->decideWrong();
+    }
 }

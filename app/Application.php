@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Controllers\AnswerController;
 use App\Controllers\ControllerInterface;
 use App\Controllers\SessionController;
 use App\Controllers\SessionStorageController;
@@ -9,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\NoConfigurationException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
@@ -40,10 +40,17 @@ class Application
             return;
         }
 
+        $options = [];
+        foreach ($parameters as $key => $value) {
+            if (substr($key, 0, 3) === 'app') {
+                $options[$key] = $value;
+            }
+        }
+
         $controllerName = $parameters['_controller'];
         /** @var ControllerInterface $controller */
         $controller = new $controllerName();
-        $controller->handle($parameters['slug'] ?? null);
+        $controller->handle($options);
     }
 
     private function routeCollection(RouteCollection $routeCollection): void
@@ -60,7 +67,7 @@ class Application
         $routeCollection->add(
             'session-storage-new-or-saved',
             new Route(
-                path: '/session-storage/{slug}',
+                path: '/session-storage/{appSessionId}',
                 defaults: ['_controller' => SessionStorageController::class],
                 methods: [Request::METHOD_GET]
             ),
@@ -69,8 +76,17 @@ class Application
         $routeCollection->add(
             'session-new-or-saved',
             new Route(
-                path: '/session/{slug}',
+                path: '/session/{appSessionId}',
                 defaults: ['_controller' => SessionController::class],
+                methods: [Request::METHOD_GET]
+            ),
+        );
+
+        $routeCollection->add(
+            'answer',
+            new Route(
+                path: '/answer/{appSessionId}/{appQuestionId}/{appAnswerId}',
+                defaults: ['_controller' => AnswerController::class],
                 methods: [Request::METHOD_GET]
             ),
         );

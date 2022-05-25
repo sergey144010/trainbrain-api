@@ -14,7 +14,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class SessionStorageController
 {
-    public function handle(string $sessionId = null): void
+    /**
+     * @param Array<string, string> $options
+     * @return void
+     * @throws \App\Services\Session\SessionIdException
+     */
+    public function handle(array $options): void
     {
         JsonResponse::fromJsonString(
             (new Session(
@@ -22,7 +27,7 @@ class SessionStorageController
                     new SessionRepository((new RedisClient())->redis()),
                     new QuestionProvider(new DefinitionProvider(new DefinitionRepository()))
                 ),
-                isset($sessionId) ? new SessionId($sessionId) : null
+                isset($options['appSessionId']) ? new SessionId($options['appSessionId']) : null
             ))->toJson()
         )->send();
     }
