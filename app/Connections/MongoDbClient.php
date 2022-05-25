@@ -11,9 +11,11 @@ class MongoDbClient
 
     public function __construct()
     {
+        /** @phpstan-ignore-next-line */
         $this->collection = (new Client(
             uri: 'mongodb://mongo/'
-        ))->trainbrain->definitions;
+        ))
+            ->trainbrain->definitions;
     }
 
     public function collection(): Collection

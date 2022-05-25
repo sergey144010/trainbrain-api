@@ -19,9 +19,8 @@ class DefinitionRepository implements DefinitionRepositoryInterface
     /** @return Array<string, mixed> */
     public function definitionCollection(): array
     {
-        return array_map(function(BSONDocument $document) {
+        return array_map(function (BSONDocument $document) {
                 return $document->getArrayCopy();
-            }, $this->collection->find()->toArray()
-        );
+        }, $this->collection->find()->toArray());
     }
 }

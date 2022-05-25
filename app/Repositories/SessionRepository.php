@@ -9,16 +9,23 @@ use App\Services\Session\SessionSchema;
 
 class SessionRepository implements SessionRepositoryInterface
 {
+    public function __construct(private \Redis $redis)
+    {
+    }
+
     public function findBySessionId(SessionId $sessionId): \stdClass
     {
-        throw new SessionNotFoundException();
+        $response = $this->redis->get($sessionId->value());
+        if ($response === false) {
+            throw new SessionNotFoundException();
+        }
+
+        return json_decode($response);
     }
 
     public function toStorage(SessionSchema $sessionSchema): void
     {
-        $redis = new \Redis();
-        $redis->connect('redis', 6379);
         $schema = $sessionSchema->toArray();
-        $redis->set($schema['session_id'], json_encode($schema));
+        $this->redis->set($schema['session_id'], json_encode($schema));
     }
 }
