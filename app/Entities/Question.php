@@ -97,8 +97,11 @@ class Question
 
     public function decideBy(int $trueId): void
     {
-        if ($this->state[self::STATE_KEY_TRUE_ID] !== null) {
-            throw new \RuntimeException('True_id already setup');
+        if (
+            isset($this->state[self::STATE_KEY_STATUS]) &&
+            $this->state[self::STATE_KEY_STATUS] !== null
+        ) {
+            throw new \RuntimeException('Status already setup');
         }
 
         if ((int)$this->state[self::STATE_KEY_TRUE_ID] === $trueId) {

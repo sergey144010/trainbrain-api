@@ -76,6 +76,22 @@ class Application
         $routeCollection->add(
             'session-new-or-saved',
             new Route(
+                path: '/session',
+                defaults: ['_controller' => SessionController::class],
+                methods: [Request::METHOD_GET]
+            ),
+        );
+        $routeCollection->add(
+            'session-new-or-saved-',
+            new Route(
+                path: '/session/',
+                defaults: ['_controller' => SessionController::class],
+                methods: [Request::METHOD_GET]
+            ),
+        );
+        $routeCollection->add(
+            'session-new-or-saved-id',
+            new Route(
                 path: '/session/{appSessionId}',
                 defaults: ['_controller' => SessionController::class],
                 methods: [Request::METHOD_GET]

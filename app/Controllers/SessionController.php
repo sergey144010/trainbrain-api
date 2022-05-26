@@ -11,6 +11,7 @@ use App\Services\Session\Session;
 use App\Services\Session\SessionId;
 use App\Services\Session\SessionProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class SessionController
 {
@@ -28,7 +29,9 @@ class SessionController
                     new QuestionProvider(new DefinitionProvider(new DefinitionRepository()))
                 ),
                 isset($options['appSessionId']) ? new SessionId($options['appSessionId']) : null
-            ))->withoutTrueId()->toJson()
+            ))->withoutTrueId()->toJson(),
+            Response::HTTP_OK,
+            ['Access-Control-Allow-Origin' => '*']
         )->send();
     }
 }

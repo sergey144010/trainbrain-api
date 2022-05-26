@@ -11,6 +11,7 @@ use App\Services\Session\Session;
 use App\Services\Session\SessionId;
 use App\Services\Session\SessionProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class AnswerController
 {
@@ -31,15 +32,26 @@ class AnswerController
         ));
         $session->findSession();
 
+        $session->decideBy((int)$options['appQuestionId'], (int)$options['appAnswerId']);
+
         try {
+            //TODO this has bug
             $session->decideBy((int)$options['appQuestionId'], (int)$options['appAnswerId']);
         } catch (\RuntimeException) {
-            JsonResponse::fromJsonString($session->withoutTrueId()->toJson())->send();
+            JsonResponse::fromJsonString(
+                $session->withoutTrueId()->toJson(),
+                Response::HTTP_OK,
+                ['Access-Control-Allow-Origin' => '*']
+            )->send();
 
             return;
         }
 
         $session->sessionSchemaToStorage();
-        JsonResponse::fromJsonString($session->withoutTrueId()->toJson())->send();
+        JsonResponse::fromJsonString(
+            $session->withoutTrueId()->toJson(),
+            Response::HTTP_OK,
+            ['Access-Control-Allow-Origin' => '*']
+        )->send();
     }
 }
